@@ -1,5 +1,6 @@
 from unittest.mock import Mock
 from lib.music_library import *
+import pytest
 
 # Given a new MusicLibrary, 
 # when a track is added, 
@@ -47,3 +48,49 @@ def test_search_returns_only_matching_track():
     fake_track_2.matches.return_value = False
     result = music.search("word")
     assert result == [fake_track_1]
+
+
+# Given a MusicLibrary where no tracks match the keyword, 
+# when search() is called, 
+# then it should return an empty list.
+
+def test_search_returns_no_matching_track():
+    music = MusicLibrary()
+    fake_track_1 = Mock()
+    music.add_track(fake_track_1)
+    fake_track_1.matches.return_value = False
+    fake_track_2 = Mock()
+    music.add_track(fake_track_2)
+    fake_track_2.matches.return_value = False
+    result = music.search("word")
+    assert result == []
+
+
+# Given a mock track that raises an exception when matches() is called, 
+# when search() is executed, 
+# then the exception should propagate or be handled appropriately.
+
+def test_exception_is_handled_properly():
+    music = MusicLibrary()
+    fake_track_1 = Mock()
+    music.add_track(fake_track_1)
+    fake_track_1.matches.return_value = False
+    fake_track_2 = Mock()
+    music.add_track(fake_track_2)
+    fake_track_2.matches.side_effect = Exception("something went wrong")
+    with pytest.raises(Exception) as e:
+        music.search("word")
+    assert str(e.value) == "something went wrong"
+
+
+# Given an empty MusicLibrary, 
+# when search() is called, 
+# then it should return an empty list without calling any mocks.
+
+    def test_empty_library():
+        music = MusicLibrary()
+        result = music.search("word")
+        assert result == []
+
+
+

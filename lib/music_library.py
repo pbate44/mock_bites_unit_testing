@@ -10,6 +10,9 @@ class MusicLibrary():
     def search(self, keyword):
         search_list = []
         for track in self.track_list:
-            if track.matches(keyword):
-                search_list.append(track)
+            try:
+                if track.matches(keyword):
+                    search_list.append(track)
+            except Exception:
+                raise Exception("something went wrong")
         return search_list
